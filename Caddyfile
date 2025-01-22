@@ -8,10 +8,10 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
-zenopto.com {
-  # Set this path to your site's directory.
-  root * /usr/share/caddy
+zenopto.com, www.zenopto.com {
+  root * /var/www/html
   file_server
+  try_files {path} /index.html
 }
 
 api.zenopto.com {
