@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #2c2c2c;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    #terminal {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    .prompt {
+      color: #00ff00;
+      margin-bottom: 10px;
+    }
+
+    .prompt span {
+      color: #ff9900;
+    }
+
+    .response {
+      margin-bottom: 10px;
+    }
+
+    .response.error {
+      color: #ff0000;
+    }
+
+    #input-line {
+      display: flex;
+      align-items: center;
+    }
+
+    #cmd-input {
+      background: transparent;
+      border: none;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      flex: 1;
+      outline: none;
+      position: relative;
+      top: -5px;
+      left: 5px;
+    }
+
+    #footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    #footer a {
+      color: #888;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="terminal">
+    <div class="prompt">
+      <span>zenopto.com</span>:~$ Welcome to Zenopto.com
+    </div>
+    <div id="output"></div>
+    <div id="input-line">
+      <span class="prompt"><span>zenopto.com</span>:~$</span>
+      <input type="text" id="cmd-input" autofocus>
+    </div>
+  </div>
+  <div id="footer">
+    © 2025 zenopto.com - <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2025110811号</a>
+  </div>
+
+  <script>
+    const cmdInput = document.getElementById('cmd-input');
+    const output = document.getElementById('output');
+    const terminal = document.getElementById('terminal');
+
+    cmdInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const command = this.value;
+        if (command === 'clear') {
+          const newLines = output.querySelectorAll('.new-line, .response');
+          newLines.forEach(element => element.remove());
+          this.value = '';
+          return;
+        }
+
+        const cmdLine = document.createElement('div');
+        cmdLine.className = 'prompt new-line';
+        cmdLine.innerHTML = `<span>zenopto.com</span>:~$ ${command}`;
+        const response = document.createElement('div');
+        response.textContent = `Command not found: ${command}`;
+        response.className = 'response';
+
+        if (command.startsWith('echo ')) {
+          response.textContent = command.slice(5);
+        } else {
+          response.classList.add('error');
+        }
+
+        output.appendChild(cmdLine);
+        output.appendChild(response);
+
+        this.value = '';
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+    });
+
+    window.addEventListener('click', function () {
+      cmdInput.focus();
+    });
+  </script>
+</body>
+
+</html>
