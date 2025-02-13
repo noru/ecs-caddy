@@ -17,7 +17,11 @@ zenopto.com, www.zenopto.com {
 api.zenopto.com {
 
   handle_path /go_starter/* {
-    reverse_proxy http://localhost:8080
+    reverse_proxy http://localhost:8080 {
+      # hide real ip
+      header_up X-Real-IP ""
+      header_up X-Forwarded-For ""
+    }
   }
 
   handle_path /homelander/* {
